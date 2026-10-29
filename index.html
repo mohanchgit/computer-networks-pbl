@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 1 — Observe the System, Understand the Layers</title>
+<style>
+:root{--bg:#f4f7fb;--ink:#17253b;--muted:#617089;--navy:#102642;--blue:#1c6fba;--cyan:#12a6b5;--line:#d8e2ee;--gold:#f3bd4f;--green:#18845b;--red:#c64d4d;--white:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(120deg,#102642,#1c6fba 70%,#12a6b5);color:white;padding:34px 0 30px}.wrap{max-width:1160px;margin:auto;padding:0 18px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;color:#bfeeff;font-weight:800}h1{font-size:clamp(2rem,4.5vw,3.2rem);line-height:1.12;margin:.4rem 0 1rem}header p{max-width:880px;color:#e7f4ff;font-size:1.08rem}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}.chip{border:1px solid #ffffff55;border-radius:99px;padding:4px 11px;background:#ffffff12;font-size:.85rem}
+nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:10}.nav{display:flex;gap:5px;overflow:auto;padding:8px 0}.nav a{white-space:nowrap;text-decoration:none;color:#334761;font-weight:700;padding:8px 11px;border-radius:8px}.nav a:hover{background:#eaf4fc}
+main{padding:24px 0 50px}.section{scroll-margin-top:74px;margin:20px 0 34px}.head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:13px}h2{font-size:1.55rem;line-height:1.25;margin:0}h3{font-size:1.1rem;margin:.2rem 0 .55rem}.sub{color:var(--muted);margin:.25rem 0 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 5px 18px #10264208}.card p{color:var(--muted);margin:.4rem 0}.btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}button,select,input{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:750}button:hover{filter:brightness(.94)}button.secondary{background:#e8f0f8;color:#23415f}button.gold{background:var(--gold);color:#34280d}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.lab{background:#0e2036;color:#eef7ff;border-radius:17px;padding:18px;overflow:hidden}.lab p{color:#bfd0e3}.lab h3{color:#fff}.status{font-weight:750;color:#f8d57d}.topline{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.topline p{margin:.15rem 0}.path{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;position:relative;margin:20px 0 12px}.device{position:relative;z-index:1;text-align:center;padding:12px 8px;border:1px solid #45617f;border-radius:12px;background:#193450;min-height:105px;display:flex;flex-direction:column;justify-content:center;align-items:center}.device .emoji{font-size:1.7rem}.device strong{font-size:.9rem}.device small{font-size:.76rem;color:#bed1e5}.device.active{border-color:#f3bd4f;box-shadow:0 0 0 2px #f3bd4f55;background:#274767}.device.done{border-color:#24c58a}.wire{position:absolute;top:50%;left:8%;right:8%;height:3px;background:#496d91}.pulse{position:absolute;z-index:3;top:calc(50% - 6px);left:8%;height:13px;width:13px;border-radius:4px;background:#f3bd4f;box-shadow:0 0 16px #f3bd4f;display:none}.pulse.go{display:block;animation:move 3.5s linear forwards}@keyframes move{to{left:91%}}.packet-note{background:#152d48;border:1px solid #36516d;border-radius:10px;padding:12px;color:#e6f3ff;min-height:55px}.capture-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.capture-tabs button{background:#233f5d}.capture-tabs button.selected{background:var(--gold);color:#33270d}.bytes{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}.byte{padding:8px 10px;border-radius:7px;background:#284563;border:1px solid #476684;font: .86rem ui-monospace,SFMono-Regular,Consolas,monospace}.byte.payload{background:#135d65;border-color:#28aeb6}.byte.changed{background:#664b20;border-color:#f3bd4f}.byte.removed{opacity:.45;text-decoration:line-through}.legend{display:flex;gap:12px;flex-wrap:wrap;color:#bfd0e3;font-size:.82rem}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}.callout{border-left:4px solid var(--cyan);padding:12px 14px;background:#e9f9fb;border-radius:0 10px 10px 0;margin:12px 0}.callout.goldline{border-color:var(--gold);background:#fff8e8}.formula{font:600 clamp(1.3rem,3vw,2rem) ui-monospace,Consolas,monospace;text-align:center;padding:14px;background:#f2f7fc;border-radius:12px;color:#174d7c}.range-row{margin:12px 0}.range-row label{display:flex;justify-content:space-between;gap:10px;font-weight:700}.range-row input{width:100%;accent-color:var(--blue)}.big-num{font-size:2rem;font-weight:850;color:var(--blue)}.barbox{height:15px;background:#e1eaf4;border-radius:99px;overflow:hidden;margin:8px 0}.barbox span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .35s}.waist{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:stretch;margin:14px 0}.stack{display:grid;gap:7px}.stack div{border:1px solid var(--line);background:#f5f8fc;border-radius:9px;padding:10px;text-align:center;font-weight:700}.ipbox{border:2px solid var(--cyan);border-radius:14px;background:#e8fbfc;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px}.ipbox strong{font-size:1.65rem;color:#087780}.ipbox p{color:#315c63;font-size:.9rem}.trade{display:grid;grid-template-columns:1fr 1fr;gap:10px}.trade>div{border-radius:10px;padding:12px;background:#f3f7fb}.trade .plus{background:#e8f8ef}.trade .minus{background:#fff4e1}.q{font-weight:800;font-size:1.08rem}.options{display:grid;gap:8px;margin-top:12px}.options button{text-align:left;background:#f1f6fb;color:#263d59;border:1px solid var(--line)}.options button.correct{background:#e5f7ed;border-color:#18845b;color:#146441}.options button.wrong{background:#fff0f0;border-color:#c64d4d;color:#983737}.feedback{padding:11px;border-radius:9px;background:#f0f5fa;margin-top:12px;min-height:45px}.feedback.good{background:#e5f7ed;color:#146441}.feedback.bad{background:#fff0f0;color:#983737}.progress{height:8px;border-radius:99px;background:#e0e9f2;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;width:0;background:var(--cyan);transition:width .3s}footer{background:#102642;color:#d8e7f7;padding:20px 0}footer p{margin:.25rem 0}
+@media(max-width:760px){.grid,.three{grid-template-columns:1fr}.path{grid-template-columns:1fr;gap:8px}.wire,.pulse{display:none!important}.device{min-height:65px;flex-direction:row;gap:10px}.device .emoji{font-size:1.4rem}.waist{grid-template-columns:1fr}.ipbox{min-height:130px}.trade{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="eyebrow">Computer Networks and Network Programming · Week 1</div>
+<h1>Observe the System.<br>Understand the Layers.</h1>
+<p>Start with a working system before memorising theory. Follow one sensor reading through a network, inspect it at different points, and discover why the payload can stay the same while the surrounding headers change.</p>
+<div class="chips"><span class="chip">Interactive packet journey</span><span class="chip">Three-point capture</span><span class="chip">Layering economics</span><span class="chip">IP narrow waist</span><span class="chip">End-to-end design</span></div>
+</div></header>
+<nav><div class="wrap nav"><a href="#system">1 · Working system</a><a href="#captures">2 · Compare captures</a><a href="#layering">3 · Why layers?</a><a href="#waist">4 · IP narrow waist</a><a href="#endtoend">5 · End-to-end</a><a href="#check">Knowledge check</a></div></nav>
+<main class="wrap">
+<section class="section" id="system">
+<div class="head"><div><h2>1.1 · Start with the system working</h2><p class="sub">SETU is a teaching scenario: a sensor reading is displayed by a browser on another network segment.</p></div></div>
+<div class="lab">
+<div class="topline"><div><h3>SETU: sensor → service → browser</h3><p>Two switches and a router connect the sensor segment to the service and browser segments.</p></div><div class="btns"><button id="runPath">▶ Send reading</button><button class="secondary" id="resetPath">↺ Reset</button></div></div>
+<div class="path" id="path">
+<div class="wire"></div><div class="pulse" id="pulse"></div>
+<div class="device" data-step="0"><span class="emoji">🌡️</span><strong>Sensor</strong><small>Instrumentation segment</small></div>
+<div class="device" data-step="1"><span class="emoji">🔀</span><strong>Switch 1</strong><small>Local Ethernet</small></div>
+<div class="device" data-step="2"><span class="emoji">🧭</span><strong>Router</strong><small>Between IP networks</small></div>
+<div class="device" data-step="3"><span class="emoji">🗄️</span><strong>Service</strong><small>Receives reading</small></div>
+<div class="device" data-step="4"><span class="emoji">🖥️</span><strong>Browser</strong><small>Different segment</small></div>
+</div>
+<div class="packet-note" id="pathStatus" aria-live="polite">System ready. Select “Send reading” to follow a reading of <code>temperature=21.7°C</code>.</div>
+<div class="legend"><span><i class="dot" style="background:#f3bd4f"></i>Packet in transit</span><span><i class="dot" style="background:#24c58a"></i>Completed step</span><span>Illustrative topology, not a live network.</span></div>
+</div>
+<div class="callout"><strong>Think first:</strong> The system works even though you did not build it. What evidence would you collect to explain how the reading moves from the sensor to the browser?</div>
+</section>
+
+<section class="section" id="captures">
+<div class="head"><div><h2>1.2 · Look at the same reading at three points</h2><p class="sub">Switch between capture points to compare the illustrative frame, packet, and payload.</p></div></div>
+<div class="card">
+<div class="capture-tabs" role="group" aria-label="Capture point"><button class="selected" data-capture="0">Capture A · Before router</button><button data-capture="1">Capture B · After router</button><button data-capture="2">Capture C · At service</button></div>
+<h3 id="captureTitle">Capture A — incoming frame</h3>
+<p id="captureDesc">On the sensor-side LAN, the Ethernet frame carries an IP packet toward the router.</p>
+<div class="bytes" id="byteView" aria-live="polite"></div>
+<div class="legend" style="color:#617089"><span><i class="dot" style="background:#284563"></i>Link / network / transport metadata</span><span><i class="dot" style="background:#135d65"></i>Same application payload</span><span><i class="dot" style="background:#664b20"></i>Changed field</span></div>
+<div class="callout goldline" id="captureInsight">Observe: the destination Ethernet address identifies the next hop on this LAN, not necessarily the final server.</div>
+<div class="btns"><button id="compareBtn">Compare all three captures</button><button class="secondary" id="revealBtn">Reveal explanation</button></div>
+<div id="comparePanel" style="display:none;margin-top:14px">
+<table style="width:100%;border-collapse:collapse"><thead><tr style="background:#eaf2f9"><th style="padding:9px;text-align:left">Field</th><th style="padding:9px;text-align:left">A · Before router</th><th style="padding:9px;text-align:left">B · After router</th><th style="padding:9px;text-align:left">C · Service side</th></tr></thead><tbody id="compareRows"></tbody></table>
+</div>
+<div id="explanation" class="callout" style="display:none"><strong>Why bytes differ:</strong> Ethernet headers are link-local and are rebuilt for each routed link. The IP source and destination generally remain the same end-to-end, while the IPv4 TTL decreases at each router hop. The transport/application payload can remain identical. A router may also update the IPv4 header checksum. Switches normally forward Ethernet frames without decrementing IP TTL; a router does.</div>
+</div>
+<p class="small">Teaching simplification: addresses, TTL, checksums, and frame fields are illustrative. Real captures depend on VLANs, NAT, tunnels, IPv4/IPv6, encryption, and where capture occurs. The router changes Ethernet framing; the TTL example assumes IPv4.</p>
+</section>
+
+<section class="section" id="layering">
+<div class="head"><div><h2>2 · Why layering exists at all</h2><p class="sub">Layering is an engineering and scaling strategy, not just a diagram to memorise.</p></div></div>
+<div class="grid two">
+<div class="card">
+<h3>The design problem</h3><p>Imagine <strong>N application types</strong> need to work across <strong>M physical network technologies</strong>.</p>
+<div class="range-row"><label for="apps">Application types (N) <strong id="appsVal">4</strong></label><input id="apps" type="range" min="1" max="12" value="4"></div>
+<div class="range-row"><label for="links">Link technologies (M) <strong id="linksVal">5</strong></label><input id="links" type="range" min="1" max="12" value="5"></div>
+<div class="grid two">
+<div class="card" style="background:#fff5e8"><div class="sub">Without a shared layer</div><div class="big-num" id="directCount">20</div><p>Application × link integrations</p></div>
+<div class="card" style="background:#e8f8ef"><div class="sub">With a common layer</div><div class="big-num" id="layerCount">9</div><p>Application + link interfaces</p></div>
+</div>
+<div class="barbox"><span id="savingBar"></span></div><p id="savingText" class="small">A shared layer reduces the number of integration relationships in this simplified model.</p>
+</div>
+<div class="card">
+<h3>What changes when a new link appears?</h3>
+<div class="trade"><div class="minus"><strong>Without layering</strong><p>Every application may need another implementation or adaptation for the new link technology.</p></div><div class="plus"><strong>With layering</strong><p>Implement the common interface for the new link; applications above it can continue using the shared service.</p></div></div>
+<div class="callout"><strong>Key idea:</strong> Layering creates stable interfaces. Each layer can evolve behind its interface, reducing how much other parts of the system must change.</div>
+<p><strong>Connection to later topics:</strong> Message brokers and middleware can solve a similar integration problem by allowing many producers and consumers to communicate through a shared interface.</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="waist">
+<div class="head"><div><h2>3 · The Internet's narrow waist: IP</h2><p class="sub">One common network-layer protocol connects many applications to many link technologies.</p></div></div>
+<div class="card">
+<div class="waist">
+<div class="stack"><div>Web / HTTP</div><div>Messaging</div><div>Streaming</div><div>Telemetry</div></div>
+<div class="ipbox"><strong>IP</strong><b>The common network layer</b><p>Best-effort packet delivery across interconnected networks. IP does not promise delivery, ordering, or duplicate suppression.</p></div>
+<div class="stack"><div>Ethernet / copper</div><div>Wi-Fi / radio</div><div>Fibre</div><div>Satellite / mesh</div></div>
+</div>
+<div class="callout"><strong>Why “narrow waist”?</strong> Many upper-layer services can use IP, and many different link technologies can carry IP packets. Each side needs to agree on the IP interface, not on every possible application-to-link pairing.</div>
+<div class="grid three">
+<div class="card"><h3>Above IP</h3><p>Applications and transport protocols decide what extra properties they need, such as reliable delivery or request semantics.</p></div>
+<div class="card"><h3>IP itself</h3><p>Forwards packets on a best-effort basis. Packets may be lost, duplicated, or arrive out of order; corruption detection and handling depend on the relevant protocol and layer.</p></div>
+<div class="card"><h3>Below IP</h3><p>Link technologies move frames across a local link using technology-specific addressing and framing.</p></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="endtoend">
+<div class="head"><div><h2>4 · The end-to-end argument</h2><p class="sub">Put functions where they can be implemented correctly and evolved independently.</p></div></div>
+<div class="grid two">
+<div class="card">
+<h3>Explore a reliability requirement</h3>
+<p>Suppose an application must know whether a complete reading was received correctly by the intended service.</p>
+<div class="range-row"><label for="reliability">Importance of application-level confirmation <strong id="reliabilityVal">High</strong></label><input id="reliability" type="range" min="1" max="3" value="3"></div>
+<div id="reliabilityAdvice" class="callout">Use an application-level acknowledgement or response that confirms the service received and accepted the reading. Link-level checks alone cannot establish the full application outcome.</div>
+</div>
+<div class="card">
+<h3>What “end-to-end” does—and does not—mean</h3>
+<p><strong>It means:</strong> some guarantees can only be fully checked at the endpoints, because intermediate links cannot know the application's complete goal.</p>
+<p><strong>It does not mean:</strong> routers and links are useless, or that reliability, security, and congestion control belong only in applications. Lower layers still provide important local functions.</p>
+<div class="callout goldline">Example: Ethernet can detect some frame errors on a local link, and TCP can provide reliable ordered delivery between transport endpoints. An application may still need to confirm that a database stored the reading or that a business action completed.</div>
+</div>
+</div>
+</section>
+
+<section class="section" id="check">
+<div class="head"><div><h2>5 · Check your understanding</h2><p class="sub">Answer each question. Feedback explains the reasoning.</p></div><strong id="scoreText">Score: 0 / 5</strong></div>
+<div class="card">
+<div class="progress"><span id="quizBar"></span></div><div class="small" id="questionNo">Question 1 of 5</div><p class="q" id="questionText">At a router, which header is normally rebuilt for the outgoing link?</p><div class="options" id="answerOptions"></div><div class="feedback" id="feedback" aria-live="polite">Choose an answer to continue.</div><div class="btns" style="margin-top:12px"><button id="next" disabled>Next question →</button><button class="secondary" id="restart">Restart quiz</button></div>
+</div>
+</section>
+</main>
+<footer><div class="wrap"><strong>Week 1 · Computer Networks and Network Programming</strong><p>Interactive conceptual model for exploring packet forwarding, layering, IP's narrow waist, and end-to-end design.</p></div></footer>
+<script>
+const $=id=>document.getElementById(id);
+let pathTimer=null, pathIndex=0, quizIndex=0, score=0, answered=false;
+const pathMessages=[
+"The sensor creates a reading: temperature=21.7°C. The application data is ready to be sent.",
+"Switch 1 forwards the Ethernet frame within the local Layer 2 network. A normal switch does not decrement IP TTL.",
+"The router removes the incoming link-layer framing, examines the IP packet, decrements IPv4 TTL, updates the IPv4 header checksum, and frames the packet for the outgoing link.",
+"The service receives the packet and passes the relevant data to its transport and application handlers.",
+"The browser on a different segment displays the reading after the service makes it available."
+];
+function resetPath(){clearInterval(pathTimer);pathTimer=null;pathIndex=0;$('pulse').classList.remove('go');document.querySelectorAll('.device').forEach(d=>d.classList.remove('active','done'));$('pathStatus').textContent='System ready. Select “Send reading” to follow a reading of temperature=21.7°C.';}
+$('runPath').addEventListener('click',()=>{resetPath();$('pulse').classList.add('go');const nodes=[...document.querySelectorAll('.device')];function step(){nodes.forEach((n,i)=>{n.classList.toggle('active',i===pathIndex);if(i<pathIndex)n.classList.add('done');});$('pathStatus').textContent=pathMessages[pathIndex];pathIndex++;if(pathIndex>=nodes.length){clearInterval(pathTimer);pathTimer=null;$('pulse').classList.remove('go');nodes.forEach(n=>{n.classList.remove('active');n.classList.add('done');});$('pathStatus').textContent='Complete: the reading has reached the browser. Now inspect the same reading at the three capture points below.';}}step();pathTimer=setInterval(step,1400);});
+$('resetPath').addEventListener('click',resetPath);
+const captures=[
+{title:"Capture A — incoming frame",desc:"On the sensor-side LAN, the Ethernet frame carries an IP packet toward the router.",insight:"Observe: the destination Ethernet address identifies the next hop on this LAN, not necessarily the final server.",eth:"MAC src: Sensor NIC",dest:"MAC dst: Router LAN",ttl:"TTL: 64",checksum:"IPv4 checksum: C1A7"},
+{title:"Capture B — outgoing frame",desc:"After routing, the IP packet is carried inside a new Ethernet frame for the next link.",insight:"Observe: link-layer addresses changed and IPv4 TTL decreased by one at the router. The payload remains identical in this example.",eth:"MAC src: Router egress",dest:"MAC dst: Service-side next hop",ttl:"TTL: 63",checksum:"IPv4 checksum: C2A7"},
+{title:"Capture C — service-side arrival",desc:"The service-side capture sees the frame used on that local segment, carrying the same application reading.",insight:"Observe: the service receives the same reading, while link-specific framing reflects the current segment. If another router were crossed, IPv4 TTL would decrease again.",eth:"MAC src: Last-hop device",dest:"MAC dst: Service NIC",ttl:"TTL: 63",checksum:"IPv4 checksum: C2A7"}
+];
+function renderCapture(i){const c=captures[i];$('captureTitle').textContent=c.title;$('captureDesc').textContent=c.desc;$('captureInsight').textContent=c.insight;document.querySelectorAll('[data-capture]').forEach(b=>b.classList.toggle('selected',+b.dataset.capture===i));$('byteView').innerHTML=[['ETH',c.eth,''],['ETH',c.dest,'changed'],['IPv4','10.1.1.20 → 10.2.2.40',''],['TTL',c.ttl,'changed'],['CHECK',c.checksum,'changed'],['TCP','dst port: 8080',''],['PAYLOAD','temperature=21.7°C','payload']].map(([a,b,k])=>`<span class="byte ${k}">${a}: ${b}</span>`).join('');}
+document.querySelectorAll('[data-capture]').forEach(b=>b.addEventListener('click',()=>renderCapture(+b.dataset.capture)));
+renderCapture(0);
+$('compareBtn').addEventListener('click',()=>{const p=$('comparePanel');p.style.display=p.style.display==='none'?'block':'none';$('compareBtn').textContent=p.style.display==='none'?'Compare all three captures':'Hide comparison';});
+$('revealBtn').addEventListener('click',()=>{const p=$('explanation');p.style.display=p.style.display==='none'?'block':'none';$('revealBtn').textContent=p.style.display==='none'?'Reveal explanation':'Hide explanation';});
+const rows=[
+["Ethernet source","Sensor NIC","Router egress","Last-hop device"],
+["Ethernet destination","Router LAN","Service-side next hop","Service NIC"],
+["IPv4 source / destination","10.1.1.20 → 10.2.2.40","10.1.1.20 → 10.2.2.40","10.1.1.20 → 10.2.2.40"],
+["IPv4 TTL","64","63","63"],
+["Application payload","temperature=21.7°C","temperature=21.7°C","temperature=21.7°C"]
+];
+$('compareRows').innerHTML=rows.map((r,i)=>`<tr>${r.map((v,j)=>`<td style="padding:9px;border-bottom:1px solid #d8e2ee;${j===0?'font-weight:750;':''}">${v}</td>`).join('')}</tr>`).join('');
+function updateScaling(){const n=+$('apps').value,m=+$('links').value,d=n*m,l=n+m,save=Math.max(0,(d-l)/d*100);$('appsVal').textContent=n;$('linksVal').textContent=m;$('directCount').textContent=d;$('layerCount').textContent=l;$('savingBar').style.width=save+'%';$('savingText').textContent=`In this simplified interface-count model, ${n} application types × ${m} link types = ${d} direct integrations; a common layer requires about ${n}+${m} = ${l} integrations. Reduction: ${save.toFixed(0)}%.`;}
+['apps','links'].forEach(id=>$(id).addEventListener('input',updateScaling));updateScaling();
+$('reliability').addEventListener('input',()=>{const v=+$('reliability').value;const labels={1:'Low',2:'Medium',3:'High'};const texts={1:'For a best-effort display, basic transport and link behavior may be enough. Decide explicitly what loss or delay the application can tolerate.',2:'Use transport reliability where appropriate, plus application checks for malformed, stale, or missing readings if those matter to the use case.',3:'Use an application-level acknowledgement or response that confirms the service received and accepted the reading. Link-level checks alone cannot establish the full application outcome.'};$('reliabilityVal').textContent=labels[v];$('reliabilityAdvice').textContent=texts[v];});
+const questions=[
+{q:"At a router, which header is normally rebuilt for the outgoing link?",opts:["The Ethernet/link-layer header","The application payload","The browser's HTML page","The sensor's measurement value"],a:0,why:"A router forwards an IP packet over a new link and creates link-layer framing appropriate for that outgoing link."},
+{q:"In the simplified IPv4 example, why does TTL change from 64 to 63?",opts:["A switch always reduces TTL","The router decrements TTL when forwarding an IPv4 packet","The application rewrites the temperature","The browser changes it"],a:1,why:"IPv4 routers decrement TTL to limit packet lifetime and prevent packets circulating indefinitely."},
+{q:"What is the main economic benefit of a common layer?",opts:["It removes the need for protocols","It reduces the number of separate integrations needed between applications and link technologies","It makes every packet identical at every capture point","It guarantees zero packet loss"],a:1,why:"A shared interface means each application can use the common layer and each link technology can support it, avoiding a separate integration for every pair."},
+{q:"Why is IP described as the Internet's narrow waist?",opts:["It only works on one type of cable","It is a common network-layer protocol used by many upper-layer protocols and carried over many link types","It guarantees ordered delivery","It replaces all application protocols"],a:1,why:"IP's shared role allows diverse applications and diverse link technologies to interoperate through a common network-layer protocol."},
+{q:"Why might an application need an acknowledgement even when TCP is used?",opts:["TCP confirms every business operation completed","An application acknowledgement can confirm the intended service accepted or processed the data","Ethernet cannot carry payloads","IP requires every application to use acknowledgements"],a:1,why:"TCP can deliver bytes reliably between transport endpoints, but it cannot by itself confirm that an application stored a reading or completed a business action."}
+];
+function renderQ(){answered=false;const q=questions[quizIndex];$('questionNo').textContent=`Question ${quizIndex+1} of ${questions.length}`;$('questionText').textContent=q.q;$('answerOptions').innerHTML='';q.opts.forEach((o,i)=>{const b=document.createElement('button');b.textContent=String.fromCharCode(65+i)+'. '+o;b.addEventListener('click',()=>choose(i,b));$('answerOptions').appendChild(b);});$('feedback').className='feedback';$('feedback').textContent='Choose an answer to continue.';$('next').disabled=true;$('next').textContent=quizIndex===questions.length-1?'Finish quiz':'Next question →';$('quizBar').style.width=(quizIndex/questions.length*100)+'%';}
+function choose(i,btn){if(answered)return;answered=true;const q=questions[quizIndex];[...$('answerOptions').children].forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('correct');});if(i===q.a){score++;$('scoreText').textContent=`Score: ${score} / ${questions.length}`;$('feedback').className='feedback good';$('feedback').textContent='Correct. '+q.why;}else{$('feedback').className='feedback bad';$('feedback').textContent='Not quite. '+q.why;btn.classList.add('wrong');}$('next').disabled=false;$('quizBar').style.width=((quizIndex+1)/questions.length*100)+'%';}
+$('next').addEventListener('click',()=>{if(!answered)return;if(quizIndex<questions.length-1){quizIndex++;renderQ();}else{$('questionText').textContent=`Complete — score ${score} out of ${questions.length}.`;$('answerOptions').innerHTML='';$('feedback').className='feedback '+(score>=4?'good':'');$('feedback').textContent=score>=4?'Strong understanding. Explain the capture differences in your own words.':'Review the capture comparison and layering model, then retry the quiz.';$('next').disabled=true;$('next').textContent='Completed';$('quizBar').style.width='100%';}});
+$('restart').addEventListener('click',()=>{quizIndex=0;score=0;$('scoreText').textContent='Score: 0 / 5';renderQ();});
+renderQ();
+</script>
+</body>
+</html>
